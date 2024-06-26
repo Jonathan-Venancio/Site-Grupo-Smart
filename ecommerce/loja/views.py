@@ -7,12 +7,6 @@ def homepage(request):
 def lumiar(request):
     return render(request, 'lumiar.html')
 
-def olivais(request):
-    return render(request, 'olivais.html')
-
-def alvalade(request):
-    return render(request, 'alvalade.html')
-
 def carrinho(request):
     return render(request, 'carrinho.html')
 
