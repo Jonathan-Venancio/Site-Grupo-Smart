@@ -23,5 +23,30 @@ from django.db import models
 #tipos (Compativeis, originais, toners, )
     #nome
 
+#itemestoque
+    #produto
+    #cor ()
+    #tamanho
+    #quantidade
+
+
+#ItensPedido
+    #itemestoque
+    #quantidade
+
 #pedidos
-    #
+    #cliente
+    #data_finalização
+    #finalizado
+    #id_transacao
+    #endereco
+    #itenspedido
+
+#endereço
+    #rua
+    #numero
+    #complemento
+    #cep
+    #cidade
+    #estado
+    #cliente
