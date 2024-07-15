@@ -13,16 +13,25 @@ class Cliente(models.Model):
 class Categoria(models.Model): #categorias (HP, Epson, Canon, Brother, Material de escritório, Gaming, Computadores)
     nome = models.CharField(max_length=200, null=True, blank=True)
 
+    def __str__(self):
+        return str(self.nome)
+
 class Tipo(models.Model): #tipos (Compativeis, originais, toners, )
     nome = models.CharField(max_length=200, null=True, blank=True)
 
+    def __str__(self):
+        return str(self.nome)
+
 class Produto(models.Model):
-    imagem = models.CharField(max_length=400, null=True, blank=True)
+    imagem = models.ImageField(null=True, blank=True)
     nome = models.CharField(max_length=200, null=True, blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     ativo = models.BooleanField(default=True)
     categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
     tipo = models.ForeignKey(Tipo, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"{self.categoria} {self.nome} {self.tipo}"
 
 class ItemEstoque(models.Model):
     produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.SET_NULL)
