@@ -3,6 +3,14 @@
 
 {% block body %}
 
-<h3>Loja Lumiar</h3>
+<h3>Loja</h3>
+
+{% for produto in produtos %}
+
+<img src="{{ produto.imagem.url }}" width="300" height="300">
+<p>Produto: {{produto.nome}}</p>
+<p>Preço: {{produto.preco}}</p>
+
+{% endfor%}
 
 {% endblock %}
