@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 # Create your views here.
@@ -15,6 +15,13 @@ def loja(request, nome_categoria=None):
     return render(request, 'loja.html', context)
 
 def ver_produto(request, id_produto, id_cor=None):
+    tem_estoque = False
+    cores = {}
+    tamanhos = {}
+    nome_cor_selecionada = None
+    if id_cor:
+        cor = Cor.objects.get(id=id_cor)
+        nome_cor_selecionada = cor.nome
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
     if len(itens_estoque) > 0:
@@ -23,11 +30,17 @@ def ver_produto(request, id_produto, id_cor=None):
         if id_cor:
             itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0, cor__id=id_cor)
             tamanhos = {item.tamanho for item in itens_estoque}
-    else:
-        tem_estoque = False
-        cores = {}
-    context = {"produto": produto, "itens_estoque": itens_estoque, "tem_estoque": tem_estoque, "cores": cores}
+
+    context = {"produto": produto, "tem_estoque": tem_estoque, "cores": cores, "tamanhos": tamanhos, "nome_cor_selecionada": nome_cor_selecionada}
     return render(request, "ver_produto.html", context)
+
+def adicionar_carrinho(request, id_produto):
+    if request.method == "POST" and id_produto:
+        print("Enviou o formulário")
+        return redirect('carrinho')
+    else:
+        return redirect('loja')
+
 
 def carrinho(request):
     return render(request, 'carrinho.html')
