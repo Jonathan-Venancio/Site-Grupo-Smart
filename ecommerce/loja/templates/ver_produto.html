@@ -25,17 +25,12 @@ Cor: {{ nome_cor_selecionada }}
 
 {% if tamanhos%}
 <form method="post" action="{% url 'adicionar_carrinho' produto.id %}">
-    
     {% csrf_token %}
     <p>Selecione o tamanho:</p>
-
     {% for tamanho in tamanhos %}
-
     <input type="radio" name="tamanho" value="{{ tamanho }}">
     <label for="{{ tamanho }}">{{ tamanho }}</label>
-
     {% endfor %}
-
     <button type="submit">Adicionar ao Carrinho</button>
 </form>
 {% endif %}
