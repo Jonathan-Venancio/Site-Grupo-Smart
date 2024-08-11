@@ -10,6 +10,9 @@ class Cliente(models.Model):
     id_sessao = models.CharField(max_length=200, null=True, blank=True)
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.email)
+
 class Categoria(models.Model): #categorias (HP, Epson, Canon, Brother, Material de escritório, Gaming, Computadores)
     nome = models.CharField(max_length=200, null=True, blank=True)
 
@@ -65,10 +68,16 @@ class Pedido(models.Model):
     endereco = models.ForeignKey(Endereco, null=True, blank=True, on_delete=models.SET_NULL)
     data_finalizacao = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"Cliente: {self.cliente.email} - Id_pedido: {self.id} - finalizado: {self.finalizado}"
+
 class ItensPedido(models.Model):
     itemestoque = models.ForeignKey(ItemEstoque, null=True, blank=True, on_delete=models.SET_NULL)
     quantidade =  models.IntegerField(default=0)
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"Id_pedido: {self.pedido.id} - Produto: {self.itemestoque.produto.nome} {self.itemestoque.produto.tipo} {self.itemestoque.tamanho} {self.itemestoque.cor.nome}"
 
 class Banner(models.Model):
     imagem = models.ImageField(null=True, blank=True)
