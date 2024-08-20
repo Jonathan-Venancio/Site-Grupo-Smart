@@ -4,6 +4,17 @@
 {% block body %}
 
 <h3>Carrinho</h3>
+<h4>Número do Pedido: {{ pedido.id }}</h4>
+
+{% for item in itens_pedido %}  
+<p>
+    <img src="{{ item.itemestoque.produto.imagem.url }}" width="50px" height="50px">
+    Produto: {{ item.itemestoque.produto.nome }}; 
+    Cor: {{ item.itemestoque.cor.nome }}; 
+    Tamanho: {{ item.itemestoque.tamanho }}; 
+    Quantidade: {{item.quantidade}}
+</p>
+{% endfor %}
 
 <a href="{% url 'checkout' %}">Checkout</a>
 
