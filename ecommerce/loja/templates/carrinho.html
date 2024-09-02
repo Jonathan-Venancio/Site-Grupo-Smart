@@ -5,6 +5,8 @@
 
 <h3>Carrinho</h3>
 <h4>Número do Pedido: {{ pedido.id }}</h4>
+<p>Preço total do pedido: {{ pedido.preco_total }} €</p>
+<p>Quantidade total de produtos: {{ pedido.quantidade_total }}</p>
 
 {% for item in itens_pedido %}  
 <p>
@@ -12,7 +14,9 @@
     Produto: {{ item.itemestoque.produto.nome }}; 
     Cor: {{ item.itemestoque.cor.nome }}; 
     Tamanho: {{ item.itemestoque.tamanho }}; 
-    Quantidade: {{item.quantidade}}
+    Quantidade: {{item.quantidade}};
+    Preço Unitário: {{item.itemestoque.produto.preco}} €;
+    Total: {{ item.preco_total }} €
 </p>
 {% endfor %}
 
