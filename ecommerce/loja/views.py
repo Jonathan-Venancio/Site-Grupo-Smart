@@ -41,10 +41,24 @@ def adicionar_carrinho(request, id_produto):
         id_cor = dados.get("cor")
         if not tamanho:
             return redirect('loja')
+        #pegar cliente
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            return redirect('loja')
+        pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
+        item_pedido = ItensPedido.objects.get_or_create(itemestoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade += 1
+        item_pedido.save()
+        #criar o pedido ou pegar o pedido que está em aberto
+
         return redirect('carrinho')
     else:
         return redirect('loja')
 
+def remover_carrinho(request):
+    return redirect('carrinho')
 
 def carrinho(request):
     if request.user.is_authenticated:
