@@ -20,8 +20,7 @@ def ver_produto(request, id_produto, id_cor=None):
     tamanhos = {}
     cor_selecionada = None
     if id_cor:
-        cor = Cor.objects.get(id=id_cor)
-        cor_selecionada = cor.nome
+        cor_selecionada = Cor.objects.get(id=id_cor)
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
     if len(itens_estoque) > 0:
@@ -48,7 +47,7 @@ def adicionar_carrinho(request, id_produto):
             return redirect('loja')
         pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
         item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
-        item_pedido = ItensPedido.objects.get_or_create(itemestoque=item_estoque, pedido=pedido)
+        item_pedido, criado = ItensPedido.objects.get_or_create(itemestoque=item_estoque, pedido=pedido)
         item_pedido.quantidade += 1
         item_pedido.save()
         #criar o pedido ou pegar o pedido que está em aberto
