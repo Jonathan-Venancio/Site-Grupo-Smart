@@ -14,10 +14,26 @@
     Produto: {{ item.itemestoque.produto.nome }}; 
     Cor: {{ item.itemestoque.cor.nome }}; 
     Tamanho: {{ item.itemestoque.tamanho }}; 
-    Quantidade: {{item.quantidade}};
+    <div style="display: flex;">
+        Quantidade: 
+        <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+            <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+            <button type="submit">-</button>
+        </form>
+        {{item.quantidade}}
+        <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+            <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+            <button type="submit">+</button>
+        </form>;
+    </div>
     Preço Unitário: {{item.itemestoque.produto.preco}} €;
     Total: {{ item.preco_total }} €
 </p>
+<hr>
 {% endfor %}
 
 <a href="{% url 'checkout' %}">Checkout</a>
