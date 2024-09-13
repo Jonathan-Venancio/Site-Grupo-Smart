@@ -23,7 +23,7 @@ def ver_produto(request, id_produto, id_cor=None):
         cor_selecionada = Cor.objects.get(id=id_cor)
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
-    if len(itens_estoque) > 0:
+    if len(itens_estoque) > 0:  
         tem_estoque = True
         cores = {item.cor for item in itens_estoque}
         if id_cor:
@@ -56,8 +56,28 @@ def adicionar_carrinho(request, id_produto):
     else:
         return redirect('loja')
 
-def remover_carrinho(request):
-    return redirect('carrinho')
+def remover_carrinho(request, id_produto):
+    if request.method == "POST" and id_produto:
+        dados = request.POST.dict()
+        tamanho = dados.get("tamanho")
+        id_cor = dados.get("cor")
+        if not tamanho:
+            return redirect('loja')
+        #pegar cliente
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            return redirect('loja')
+        pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
+        item_pedido, criado = ItensPedido.objects.get_or_create(itemestoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade -= 1
+        item_pedido.save()
+        if item_pedido.quantidade <=0:
+            item_pedido.delete()
+        return redirect('carrinho')
+    else:
+        return redirect('loja')
 
 def carrinho(request):
     if request.user.is_authenticated:

@@ -16,7 +16,7 @@
     Tamanho: {{ item.itemestoque.tamanho }}; 
     <div style="display: flex;">
         Quantidade: 
-        <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
+        <form method="post" action="{% url 'remover_carrinho' item.itemestoque.produto.id %}">
             {% csrf_token %}
             <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
             <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
