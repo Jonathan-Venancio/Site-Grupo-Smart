@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+import uuid
 
 # Create your views here.
 def homepage(request):
@@ -41,10 +42,21 @@ def adicionar_carrinho(request, id_produto):
         if not tamanho:
             return redirect('loja')
         #pegar cliente
+
+        resposta = redirect('carrinho')
         if request.user.is_authenticated:
             cliente = request.user.cliente
+
         else:
-            return redirect('loja')
+            if request.COOKIES.get("id_sessao"):
+                id_sessao = request.COOKIES.get("id_sessao")
+            
+            else:
+                id_sessao = str(uuid.uuid4())
+                resposta.set_cookie(key="id_sessao", value=id_sessao)
+
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        
         pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
         item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
         item_pedido, criado = ItensPedido.objects.get_or_create(itemestoque=item_estoque, pedido=pedido)
@@ -52,7 +64,7 @@ def adicionar_carrinho(request, id_produto):
         item_pedido.save()
         #criar o pedido ou pegar o pedido que está em aberto
 
-        return redirect('carrinho')
+        return resposta
     else:
         return redirect('loja')
 
