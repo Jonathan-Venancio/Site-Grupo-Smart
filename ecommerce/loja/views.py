@@ -94,10 +94,18 @@ def remover_carrinho(request, id_produto):
 def carrinho(request):
     if request.user.is_authenticated:
         cliente = request.user.cliente
+    else:
+        if request.COOKIES.get("id_sessao"):
+            id_sessao = request.COOKIES.get("id_sessao")
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        else:
+            context = {"cliente_existente": False, "itens_pedido": None, "pedido": None}
+            return render(request, 'carrinho.html', context)
+
+
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
     itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-        
-    context = {"itens_pedido": itens_pedido, "pedido": pedido}
+    context = {"itens_pedido": itens_pedido, "pedido": pedido, "cliente_existente": True}
     return render(request, 'carrinho.html', context)
 
 def checkout(request):
