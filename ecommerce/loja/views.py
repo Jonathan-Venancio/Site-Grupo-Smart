@@ -53,7 +53,7 @@ def adicionar_carrinho(request, id_produto):
             
             else:
                 id_sessao = str(uuid.uuid4())
-                resposta.set_cookie(key="id_sessao", value=id_sessao)
+                resposta.set_cookie(key="id_sessao", value=id_sessao, max_age=60*60*24*30)
 
             cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
         
