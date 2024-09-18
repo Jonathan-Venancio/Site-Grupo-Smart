@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 import uuid
 
@@ -127,8 +127,47 @@ def checkout(request):
     return render(request, 'checkout.html', context=context)
 
 def adicionar_endereco(request):
-    context = {}
-    return render(request, "adicionar_endereco.html", context)
+    if request.method == "POST":
+        # Tratar o envio do formulario
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+
+        else:
+            if request.COOKIES.get("id_sessao"):
+                id_sessao = request.COOKIES.get("id_sessao")
+                cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+            else:
+                return redirect('loja')
+            
+        # Extração de dados do formulário com validação simples
+        cidade = request.POST.get("cidade")
+        estado = request.POST.get("estado")
+        rua = request.POST.get("rua")
+        numero = request.POST.get("numero")
+        complemento = request.POST.get("complemento", "")  # Campo opcional
+        cep = request.POST.get("cep")
+
+        # Validação básica (pode ser expandida ou melhorada com um ModelForm)
+        if not all([cidade, estado, rua, numero, cep]):
+            # Redirecionar para o formulário se faltar algum campo obrigatório
+            context = { "erro": "Por favor, preencha todos os campos obrigatórios. (*)", "dados": {"cidade": cidade, "estado": estado, "rua": rua, "numero": numero, "complemento": complemento, "cep": cep} }
+
+            return render(request, "adicionar_endereco.html", context)
+
+        # Criar e salvar o endereço
+        endereco = Endereco.objects.create(
+            cliente=cliente,
+            cidade=cidade,
+            estado=estado,
+            rua=rua,
+            numero=numero,
+            complemento=complemento,
+            cep=cep
+        )
+        return redirect("checkout")
+    else:       
+        context = {}
+        return render(request, "adicionar_endereco.html", context)
 
 
 def minha_conta(request):

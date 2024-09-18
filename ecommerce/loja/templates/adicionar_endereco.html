@@ -4,6 +4,26 @@
 {% block body %}
 
 <h3>Adicionar endereço</h3>
+<a href="{% url 'checkout' %}">Retornar a compra</a>
 
+<h3>Adicione um novo endereço</h3>
+
+{% if erro %}
+        <p style="color: red;">{{ erro }}</p>
+{% endif %}
+
+
+<form method="POST" action="{% url 'adicionar_endereco' %}">
+
+    {% csrf_token %}
+    <input type="text" name="cidade" placeholder="Cidade*" value="{{ dados.cidade|default_if_none:'' }}">
+    <input type="text" name="estado" placeholder="Conselho*" value="{{ dados.estado|default_if_none:'' }}">
+    <input type="text" name="rua" placeholder="Rua*" value="{{ dados.rua|default_if_none:'' }}">
+    <input type="number" name="numero" placeholder="Número*" value="{{ dados.numero|default_if_none:'' }}">
+    <input type="text" name="complemento" placeholder="Complemento" value="{{ dados.complemento|default_if_none:'' }}">
+    <input type="number" name="cep" placeholder="CEP*" value="{{ dados.cep|default_if_none:'' }}">
+    <button type="submit">Adicionar Endereço</button>
+
+</form>
 
 {% endblock %}
