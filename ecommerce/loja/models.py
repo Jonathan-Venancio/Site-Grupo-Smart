@@ -15,12 +15,14 @@ class Cliente(models.Model):
 
 class Categoria(models.Model): #categorias (HP, Epson, Canon, Brother, Material de escritório, Gaming, Computadores)
     nome = models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return str(self.nome)
 
 class Tipo(models.Model): #tipos (Compativeis, originais, toners, )
     nome = models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return str(self.nome)
