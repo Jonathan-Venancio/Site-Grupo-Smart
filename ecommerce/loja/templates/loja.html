@@ -5,13 +5,8 @@
 
 <h3>Loja</h3>
 
-
-preco
-tamanho
-categoria
-tipo
-
 <form method="POST" action="">
+    {% csrf_token %}
 
     <p>Preço</p>
     <input type="number" name="preco_minimo" value={{ minimo }}>
