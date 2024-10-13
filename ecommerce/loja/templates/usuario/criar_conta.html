@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h3>Preencha seus dados para criar uma conta</h3>
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    <input type="email" name="email" placeholder="E-Mail">
+    <input type="password" name="senha" placeholder="Senha">
+    <input type="password" name="confirmacao_senha" placeholder="Confirmação da senha">
+    <button type="submit">Criar conta</button>
+
+</form>
+
+<a href="{% url 'fazer_login' %}">Já possui uma conta? Faça login</a>
+
+{% endblock %}
