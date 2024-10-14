@@ -5,7 +5,9 @@
 
 <h3>Preencha seus dados para criar uma conta</h3>
 
-<form method="POST" action="">
+{{ erro }}
+
+<form method="POST" action="{% url 'criar_conta' %}">
     {% csrf_token %}
 
     <input type="email" name="email" placeholder="E-Mail">
