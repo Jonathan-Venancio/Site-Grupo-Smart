@@ -107,9 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Lisbon'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -135,5 +135,3 @@ MEDIA_URL = "imagens/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'fazer_login'
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
