@@ -96,7 +96,7 @@ class Pedido(models.Model):
 class ItensPedido(models.Model):
     itemestoque = models.ForeignKey(ItemEstoque, null=True, blank=True, on_delete=models.SET_NULL)
     quantidade =  models.IntegerField(default=0)
-    pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
+    pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Id_pedido: {self.pedido.id} - Produto: {self.itemestoque.produto.nome} {self.itemestoque.produto.tipo} {self.itemestoque.tamanho} {self.itemestoque.cor.nome}"
