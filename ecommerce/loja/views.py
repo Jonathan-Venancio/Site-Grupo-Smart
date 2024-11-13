@@ -196,7 +196,51 @@ def adicionar_endereco(request):
 
 @login_required
 def minha_conta(request):
-    return render(request, 'usuario/minha_conta.html')
+    erro = None
+    alterado = False
+    if request.method == "POST":
+        dados = request.POST.dict()
+        if "senha_atual" in dados:
+            #esta mudando a senha
+            senha_atual = dados.get("senha_atual")
+            nova_senha = dados.get("nova_senha")
+            nova_senha_confirmacao = dados.get("nova_senha_confirmacao")
+            if nova_senha == nova_senha_confirmacao:
+                #verificar se a senha atual esta certo
+                usuario = authenticate(request, username=request.user.email, password=senha_atual)
+                if usuario:
+                    usuario.set_password(nova_senha)
+                    usuario.save()
+                    alterado = True
+                else:
+                    erro = "senha_incorreta"
+            else:
+                erro = "senhas_diferentes"
+        elif "email" in dados:
+            email = dados.get("email")
+            telefone = dados.get("telefone")
+            nome = dados.get("nome")
+            if email != request.user.email:
+                usuarios = User.objects.filter(email=email)
+                if len(usuarios) > 0:
+                    erro = "email_existente"
+            if not erro:
+                cliente = request.user.cliente
+                cliente.email = email
+                request.user.email = email
+                request.user.username = email
+                cliente.nome = nome
+                cliente.telefone = telefone
+                cliente.save()
+                request.user.save()
+                alterado = True
+
+        else:
+            erro = "formulario_invalido"
+
+
+    context = {"erro": erro, "alterado": alterado}
+    return render(request, 'usuario/minha_conta.html', context)
 
 @login_required
 def meus_pedidos(request):
