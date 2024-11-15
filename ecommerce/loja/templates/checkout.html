@@ -11,6 +11,21 @@
 <p>Preço total do pedido: {{ pedido.preco_total }} €</p>
 <p>Quantidade total de produtos: {{ pedido.quantidade_total }}</p>
 
+{% if erro %}
+
+    {% if erro == "preco" %}
+        <p>Preço dos produtos errados, tente novamente ou volte para o carrinho</p>
+    {% endif %}
+
+    {% if erro == "endereco" %}
+        <p>Selecione um endereço de entrega para continuar</p>
+    {% endif %}
+
+    {% if erro == "email" %}
+        <p>Preencha um e-mail para podermos confirmar a sua compra</p>
+    {% endif %}
+
+{% endif %}
 
 <form method="POST" action="{% url 'finalizar_pedido' pedido.id %}">
 

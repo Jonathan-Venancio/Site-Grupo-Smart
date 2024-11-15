@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 # Create your views here.
 def homepage(request):
@@ -147,7 +148,7 @@ def checkout(request):
 
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
     enderecos = Endereco.objects.filter(cliente=cliente)
-    context = {"pedido": pedido, "enderecos": enderecos}
+    context = {"pedido": pedido, "enderecos": enderecos, "erro":None}
     return render(request, 'checkout.html', context=context)
 
 def finalizar_pedido(request, id_pedido):
@@ -163,6 +164,7 @@ def finalizar_pedido(request, id_pedido):
             erro = "endereco"
         else:
             endereco = dados.get("endereco")
+            pedido.endereco = endereco
         
         if not request.user.is_authenticated:
             email = dados.get("email")
@@ -170,10 +172,27 @@ def finalizar_pedido(request, id_pedido):
                 validate_email(email)
             except ValidationError:
                 erro = "email"
+            if not erro:
+                clientes = Cliente.objects.filter(email=email)
+                if clientes:
+                    pedido.cliente = clientes[0]
+                    
+                else:
+                    pedido.cliente.email = email
+                    pedido.cliente.save()
+        
+        codigo_transacao = f"{pedido.id}-{datetime.now().timestamp()}"
+        pedido.codigo_transacao = codigo_transacao
+        pedido.save()
 
-        context = {"erro": erro}
-        print(erro)
-        return redirect("checkout")
+        if erro:
+            enderecos = Endereco.objects.filter(cliente=pedido.cliente)
+            context = {"erro": erro, "pedido": pedido, "enderecos": enderecos}
+            return render(request, "checkout.html", context)
+        else:
+            # Pagamento do usuário
+            return redirect("checkout", erro)
+            
     else:
         return redirect("loja")
 
