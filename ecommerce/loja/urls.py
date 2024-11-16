@@ -33,3 +33,4 @@ urlpatterns = [
 ]
 
 #Backup
+#Backup pre vendus
