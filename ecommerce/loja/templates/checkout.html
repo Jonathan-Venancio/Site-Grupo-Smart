@@ -36,7 +36,7 @@
     <br>
     
     {% for endereco in enderecos %}
-        <input type="radio" name="endereco value="{{ endereco.id }}">
+        <input type="radio" name="endereco" value="{{ endereco.id }}">
         <label for="{{ endereco.id }}">{{ endereco.rua }}, N° {{ endereco.numero }}, {{ endereco.complemento }} - {{ endereco.estado }}, {{ endereco.cidade}} - {{ endereco.cep }}</label>
         <br>
     {% endfor %}
@@ -48,7 +48,7 @@
     {% endif %}
     <hr>
     <input type="hidden" value="{{ pedido.preco_total }}" name="total">
-    <button type="submit">Finalziar o pedido - {{ pedido.preco_total }} €</button>
+    <button type="submit">Finalizar o pedido - {{ pedido.preco_total }} €</button>
 
 </form>
 

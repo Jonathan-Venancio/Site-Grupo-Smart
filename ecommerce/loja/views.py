@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from datetime import datetime
+from .api_vendus import listar_clientes
+import requests
+
 
 # Create your views here.
 def homepage(request):
@@ -156,15 +159,25 @@ def finalizar_pedido(request, id_pedido):
         erro = None
         dados = request.POST.dict()
         total = dados.get("total")
+        total = float(total.replace(",", "."))
         pedido = Pedido.objects.get(id=id_pedido)
-        if total != pedido.preco_total:
+
+        print('total')
+        print(total)
+        print('preido preco total')
+        print(float(pedido.preco_total))
+
+        if total != float(pedido.preco_total):
             erro = "preco"
 
         if not "endereco" in dados:
             erro = "endereco"
         else:
             endereco = dados.get("endereco")
-            pedido.endereco = endereco
+            print(endereco)
+            #pedido.endereco = endereco
+        
+        print(dados)
         
         if not request.user.is_authenticated:
             email = dados.get("email")
@@ -191,7 +204,7 @@ def finalizar_pedido(request, id_pedido):
             return render(request, "checkout.html", context)
         else:
             # Pagamento do usuário
-            return redirect("checkout", erro)
+            return redirect("checkout")
             
     else:
         return redirect("loja")
@@ -364,3 +377,22 @@ def criar_conta(request):
 def fazer_logout(request):
     logout(request)
     return redirect("fazer_login")
+
+
+# Teste inicial com a api do vendus
+
+def clientes_view(request):
+# Obtém o número da página a partir da query string (?page=2)
+    pagina = int(request.GET.get("page", 1))
+    
+    try:
+        dados = listar_clientes(pagina)
+        return render(request, "clientes.html", {
+            "clientes": dados["clientes"],
+            "pagina_atual": dados["pagina_atual"],
+            "proxima_pagina": dados["proxima_pagina"],
+            "pagina_anterior": dados["pagina_anterior"],
+        })
+    except requests.HTTPError as e:
+        print(f"Erro ao acessar API do Vendus: {e}")
+        return render(request, "erro.html", {"error": str(e)})
