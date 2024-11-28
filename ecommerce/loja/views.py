@@ -8,6 +8,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from datetime import datetime
 from .api_vendus import listar_clientes
+from .api_mercadopago import criar_pagamento
 import requests
 
 
@@ -162,20 +163,15 @@ def finalizar_pedido(request, id_pedido):
         total = float(total.replace(",", "."))
         pedido = Pedido.objects.get(id=id_pedido)
 
-        print('total')
-        print(total)
-        print('preido preco total')
-        print(float(pedido.preco_total))
-
         if total != float(pedido.preco_total):
             erro = "preco"
 
         if not "endereco" in dados:
             erro = "endereco"
         else:
-            endereco = dados.get("endereco")
-            print(endereco)
-            #pedido.endereco = endereco
+            id_endereco = dados.get("endereco")
+            endereco = Endereco.objects.get(id=id_endereco)
+            pedido.endereco = endereco
         
         print(dados)
         
@@ -204,7 +200,10 @@ def finalizar_pedido(request, id_pedido):
             return render(request, "checkout.html", context)
         else:
             # Pagamento do usuário
-            return redirect("checkout")
+            itens_pedido = ItensPedido.objects.filter(pedido=pedido)
+            link = ""
+            criar_pagamento(itens_pedido, link)
+            return redirect("checkout") #falta o , erro
             
     else:
         return redirect("loja")
