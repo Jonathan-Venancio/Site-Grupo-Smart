@@ -201,9 +201,11 @@ def finalizar_pedido(request, id_pedido):
         else:
             # Pagamento do usuário
             itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-            link = ""
-            criar_pagamento(itens_pedido, link)
-            return redirect("checkout") #falta o , erro
+            link = "https://webhook.site/35221e8a-4f7d-4409-b611-3757a3d07894"
+            link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
+            pagamento = Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
+            pagamento.save()
+            return redirect(link_pagamento) #falta o , erro
             
     else:
         return redirect("loja")
