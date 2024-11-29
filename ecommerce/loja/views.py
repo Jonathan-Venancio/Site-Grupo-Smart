@@ -174,8 +174,6 @@ def finalizar_pedido(request, id_pedido):
             endereco = Endereco.objects.get(id=id_endereco)
             pedido.endereco = endereco
         
-        print(dados)
-        
         if not request.user.is_authenticated:
             email = dados.get("email")
             try:
