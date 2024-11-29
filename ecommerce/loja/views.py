@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .models import *
 import uuid
 from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
@@ -201,14 +202,40 @@ def finalizar_pedido(request, id_pedido):
         else:
             # Pagamento do usuário
             itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-            link = "https://webhook.site/35221e8a-4f7d-4409-b611-3757a3d07894"
+            link = request.build_absolute_uri(reverse('finalizar_pagamento'))
             link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
             pagamento = Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
             pagamento.save()
-            return redirect(link_pagamento) #falta o , erro
+            return redirect(link_pagamento) #falta o , erro)
             
     else:
         return redirect("loja")
+
+def finalizar_pagamento(request):
+    #{'collection_id': '94357797437', 'collection_status': 'approved', 'payment_id': '94357797437', 'status': 'approved', 'external_reference': 'null', 'payment_type': 'credit_card', 'merchant_order_id': '25494331325', 'preference_id': '2120384279-e2c35be2-e374-4dde-9827-a12c43f13114', 'site_id': 'MLB', 'processing_mode': 'aggregator', 'merchant_account_id': 'null'}
+    #print(request.GET.dict()) usar isso apra saber como vem o dicionario da api do eupago
+    dados = request.GET.dict()
+    status = dados.get("status")
+    id_pagamento = dados.get("preference_id")
+    if status == "approved":
+        pagamento = Pagamento.objects.get(id_pagamento=id_pagamento)
+        pagamento.aprovado = True
+        pedido = pagamento.pedido
+        pedido.finalizado = True
+        pedido.data_finalizacao = datetime.now()
+        pedido.save()
+        pagamento.save()
+        if request.user.is_authenticated:
+            return redirect("meus_pedidos")
+        else:
+            return redirect("pedido_aprovado", pedido.id)
+    else:
+        return redirect("checkout")
+
+def pedido_aprovado(request, id_pedido):
+    pedido = Pedido.objects.get(id=id_pedido)
+    context = {"pedido": pedido}
+    return render(request, "pedido_aprovado.html", context)
 
 def adicionar_endereco(request):
     if request.method == "POST":
