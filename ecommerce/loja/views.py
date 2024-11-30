@@ -405,21 +405,28 @@ def fazer_logout(request):
     logout(request)
     return redirect("fazer_login")
 
+@login_required
+def gerenciar_loja(request):
+    if request.user.groups.filter(name="Equipe").exists():
+        return render(request, "interno/gerenciar_loja.html")
+    else:
+        redirect('loja')
 
 # Teste inicial com a api do vendus
-
+@login_required
 def clientes_view(request):
 # Obtém o número da página a partir da query string (?page=2)
-    pagina = int(request.GET.get("page", 1))
-    
-    try:
-        dados = listar_clientes(pagina)
-        return render(request, "clientes.html", {
-            "clientes": dados["clientes"],
-            "pagina_atual": dados["pagina_atual"],
-            "proxima_pagina": dados["proxima_pagina"],
-            "pagina_anterior": dados["pagina_anterior"],
-        })
-    except requests.HTTPError as e:
-        print(f"Erro ao acessar API do Vendus: {e}")
-        return render(request, "erro.html", {"error": str(e)})
+    if request.user.groups.filter(name="Equipe").exists():
+        pagina = int(request.GET.get("page", 1))
+        
+        try:
+            dados = listar_clientes(pagina)
+            return render(request, "clientes.html", {
+                "clientes": dados["clientes"],
+                "pagina_atual": dados["pagina_atual"],
+                "proxima_pagina": dados["proxima_pagina"],
+                "pagina_anterior": dados["pagina_anterior"],
+            })
+        except requests.HTTPError as e:
+            print(f"Erro ao acessar API do Vendus: {e}")
+            return render(request, "erro.html", {"error": str(e)})
