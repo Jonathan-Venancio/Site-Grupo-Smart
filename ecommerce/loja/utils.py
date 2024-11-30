@@ -1,4 +1,5 @@
 from django.db.models import Max, Min
+from django.core.mail import send_mail
 
 
 
@@ -37,3 +38,17 @@ def ordenar_produtos(produtos, ordem):
         lista_produtos = sorted(lista_produtos, reverse=True, key=lambda tupla: tupla[0])
         produtos = [item[1] for item in lista_produtos]
     return produtos
+
+
+def enviar_email_compra(pedido):
+    email = pedido.cliente.email
+    assunto = f"Pedido Aprovado: {pedido.id}"
+    corpo = f"""
+    Seu pedido foi aprovado!!!
+    ID do pedido: {pedido.id}
+    Valor total: {pedido.preco_total}€
+    Quantidade de produtos: {pedido.quantidade_total}
+    Nas proximas 24 horas você receberá um e-mail com a sua fatura
+    Obrigado por comprar em nossa loja!"""
+    remetente = "tinteirosolivais@gmail.com"
+    send_mail(assunto, corpo, remetente, [email])
