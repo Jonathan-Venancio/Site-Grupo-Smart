@@ -31,3 +31,4 @@ def faz_parte_equipe(request):
         if request.user.groups.filter(name="equipe").exists():
             equipe = True
     return {"equipe": equipe}
+
