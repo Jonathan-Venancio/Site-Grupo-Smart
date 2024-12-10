@@ -18,7 +18,8 @@ checkboxes.forEach(function(checkbox) {
         adjacentDivs.forEach(function(div) {
             div.style.color = ''; // Reset all adjacent div colors
             div.style.borderColor = ''; // Reset all adjacent div colors
-        });
+            div.style.backgroundColor = '';
+          });
 
         var adjacentDiv = this.previousElementSibling; // Get the previous sibling (the div)
         if (this.checked) {

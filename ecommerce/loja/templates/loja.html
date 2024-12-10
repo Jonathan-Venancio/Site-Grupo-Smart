@@ -58,13 +58,13 @@
           <div class="menu__controles">
             <div class="form_control">
               <div class="form_control_container">
-                <input class="form_control_container__time__input" type="number" id="fromInput" name="preco_minimo" value=0 min=0 max={% localize off %} {{ maximo }} {% endlocalize %}/>
+               <input class="form_control_container__time__input" type="number" step="0.01" id="fromInput" name="preco_minimo" value=0 />
               </div>
               <p>até</p>
               <div class="form_control_container">
-                <input class="form_control_container__time__input" type="number" id="toInput" name="preco_maximo" value={% localize off %} {{ maximo }} {% endlocalize %} min=0 max={% localize off %} {{ maximo }} {% endlocalize %}/>
+               <input class="form_control_container__time__input" type="number" step="0.01" id="toInput" name="preco_maximo" value={% localize off %} {{ maximo }} {% endlocalize %} />
               </div>
-            </div>
+             </div>
 
             <button type="submit" class="menu__botao">Filtrar</button>
           </div>
@@ -106,6 +106,7 @@
             {% endfor %}
 
           </div>
+          
         </div>
       </div>
     </form>

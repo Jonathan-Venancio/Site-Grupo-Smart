@@ -147,5 +147,5 @@ EMAIL_HOST_PASSWORD = "spyftawwrnfrgdom"
 
 
 #API VENDUS
-VENDUS_API_KEY = '018e1c2f5799590b8b0d1cad2e088dc1'
+VENDUS_API_KEY = ''
 VENDUS_API_BASE_URL = 'https://www.vendus.pt/ws/'
