@@ -35,6 +35,8 @@ class Produto(models.Model):
     categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
     tipo = models.ForeignKey(Tipo, null=True, blank=True, on_delete=models.SET_NULL)
 
+    #backup
+
     def __str__(self):
         return f"{self.categoria} - {self.nome} {self.tipo}"
     
