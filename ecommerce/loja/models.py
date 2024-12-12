@@ -34,7 +34,7 @@ class Produto(models.Model):
     ativo = models.BooleanField(default=True)
     categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
     tipo = models.ForeignKey(Tipo, null=True, blank=True, on_delete=models.SET_NULL)
-
+    descricao = models.TextField(null=True, blank=True)
     #backup
 
     def __str__(self):
