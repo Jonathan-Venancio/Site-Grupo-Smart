@@ -3,28 +3,55 @@
 
 {% block body %}
 
-<h3>Meus Pedidos</h3>
+<main class="principal">
+    <section class="conta">
+      <div class="conta__container">
+        <div class="checkout__titulos">
+          <p class="checkout__titulo">Meus pedidos</p>
+        </div>
 
-<a href="{% url 'minha_conta' %}">Minha conta</a>
+        {% for pedido in pedidos %}
+            <div class="pedido">
+                <div class="pedido__cabecalho">
+                    <div>
+                    <p><b>Data do pedido</b></p>
+                    <p>{{ pedido.data_finalizacao }}</p>
+                    </div>
 
+                    <div>
+                    <p><b>Total</b></p>
+                    <p>{{ pedido.preco_total }} €</p>
+                    </div>
 
-{% for pedido in pedidos %}
-<div style="display: block;">
-    <hr>
-    <p>ID Pedido: {{ pedido.id }}</p>
-    <p>Data: {{ pedido.data_finalizacao }}</p>
-    <p>Código de Transação: {{ pedido.codigo_transacao }}</p>
-    <p>Preço total: {{ pedido.preco_total }}</p>
-    <p>Endereço: {{ pedido.endereco.rua }} N°{{ pedido.endereco.numero }}, {{ pedido.endereco.cep }} - {{ pedido.endereco.cidade }}</p>
-    
-    {% for item in pedido.itens %}
-    <img src="{{ item.itemestoque.produto.imagem.url }}" width="50" height="50">
-    <p>Produto: {{ item.itemestoque.produto.nome }}</p>
-    <p>Quantidade: {{ item.quantidade }}</p>
-    <p>Preço: {{ item.preco_total }}</p>
-    {% endfor %}
-    
-</div>
-{% endfor %}
+                    <div>
+                    <p><b>Número do pedido</b></p>
+                    <p>{{ pedido.codigo_transacao }}</p>
+                    </div>
+
+                    <div>
+                    <p><b>Endereço</b></p>
+                    <p>{{ pedido.endereco.rua }} N°{{ pedido.endereco.numero }}, {{ pedido.endereco.cep }} - {{ pedido.endereco.cidade }}</p>
+                    </div>
+                </div>
+
+                <div class="pedido__corpo">
+                    {% for item in pedido.itens %}
+                        <div class="tabela__imagem">
+                            <img src="{{ item.itemestoque.produto.imagem.url }}" alt="{{ item.itemestoque.produto.nome }}"/>
+                        </div>
+
+                        <div class="tabela__produto-textos">
+                            <p><b>{{ item.itemestoque.produto.nome }}</b></p>
+                            <p><b>Quantidade:</b> {{ item.quantidade }}</p>
+                            <p><b>Preço:</b> {{ item.preco_total }}€</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+      </div>
+    </section>
+  </main>
 
 {% endblock %}
