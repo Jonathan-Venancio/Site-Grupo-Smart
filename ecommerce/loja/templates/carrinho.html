@@ -3,48 +3,90 @@
 
 {% block body %}
 
-<h3>Carrinho</h3>
+<main class="principal">
+    {% if cliente_existente%}
+        <section class="carrinho">
+        <div class="sacola">
+            <div class="sacola__titulos">
+            <h1 class="sacola__titulo">Carrinho</h1>
+            <p>
+                Confira seu pedido e finalize a sua compra
+            </p>
+            </div>
 
-{% if cliente_existente%}
-    <h4>Número do Pedido: {{ pedido.id }}</h4>
-    <p>Preço total do pedido: {{ pedido.preco_total }} €</p>
-    <p>Quantidade total de produtos: {{ pedido.quantidade_total }}</p>
+            <table class="tabela">
+            <tr>
+                <th>Produtos</th>
+                <th>Valor</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+            </tr>
 
-    {% for item in itens_pedido %}  
-    <p>
-        <img src="{{ item.itemestoque.produto.imagem.url }}" width="50px" height="50px">
-        Produto: {{ item.itemestoque.produto.nome }}; 
-        Cor: {{ item.itemestoque.cor.nome }}; 
-        Tamanho: {{ item.itemestoque.tamanho }}; 
-        <div style="display: flex;">
-            Quantidade: 
-            <form method="post" action="{% url 'remover_carrinho' item.itemestoque.produto.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
-                <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
-                <button type="submit">-</button>
-            </form>
-            {{item.quantidade}}
-            <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
-                <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
-                <button type="submit">+</button>
-            </form>;
+            {% for item in itens_pedido %} 
+                <tr>
+                    <td class="tabela__produto">
+                    <div class="tabela__imagem">
+                        <img src="{{ item.itemestoque.produto.imagem.url }}" alt="Imagem do Produto"/>
+                    </div>
+
+                    <div class="tabela__produto-textos">
+                        <p><b>{{ item.itemestoque.produto.nome }}</b></p>
+                        <p><b>Tamanho:</b> {{ item.itemestoque.tamanho }}</p>
+                        <p><b>Cor:</b> {{ item.itemestoque.cor.nome }}</p>
+                    </div>
+                    </td>
+
+                    <td class="tabela__preco-unit">
+                    <p class="tabela__preco">{{item.itemestoque.produto.preco}} €</p>
+                    </td>
+
+                    <td class="tabela__qtd">
+                    <div class="tabela__quantidade">
+                        <form method="post" action="{% url 'remover_carrinho' item.itemestoque.produto.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+                            <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+                            <button type="submit">-</button>
+                        </form>
+
+                        <span>{{item.quantidade}}</span>
+
+                        <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+                            <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+                            <button type="submit">+</button>
+                        </form>
+                    </div>
+                    </td>
+
+                    <td>
+                    <p class="tabela__preco tabela__preco--total">{{ item.preco_total }} €</p>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </table>
         </div>
-        Preço Unitário: {{item.itemestoque.produto.preco}} €;
-        Total: {{ item.preco_total }} €
-    </p>
-    <hr>
-    {% endfor %}
 
-    <a href="{% url 'checkout' %}">Checkout</a>
+        <div class="subtotal">
+            <div class="subtotal__infos">
+            <p>Quantidade de Produtos</p>
+            <p>{{ pedido.quantidade_total }}</p>
+            </div>
 
-{% else %}
+            <div class="subtotal__infos subtotal__infos--sborda">
+            <p>Total</p>
+            <p>{{ pedido.preco_total }} €</p>
+            </div>
 
-    <h3>Seu carrinho está vazio!</h3>
-    <a href="{% url 'loja' %}">Visite a nossa loja</a>
-    
-{% endif %}
+            <a href="{% url 'checkout' %}" class="subtotal__botao">Finalizar compra</a>
+        </div>
+        </section>
+    {% else %}
+        <h3>Seu carrinho está vazio!</h3>
+        <a href="{% url 'loja' %}">Visite a nossa loja</a>
+    {% endif %}
+</main>
 
 {% endblock %}
