@@ -8,4 +8,5 @@ requests==2.31.0
 pillow==10.2.0
 Markdown==3.5.2
 mercadopago==2.2.3
+whitenoise==6.8.2
 
