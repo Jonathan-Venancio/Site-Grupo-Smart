@@ -449,3 +449,8 @@ def clientes_view(request):
         except requests.HTTPError as e:
             print(f"Erro ao acessar API do Vendus: {e}")
             return render(request, "erro.html", {"error": str(e)})
+        
+
+def sobre(request):
+    return render(request, "sobre.html")
+

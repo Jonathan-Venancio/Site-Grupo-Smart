@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h3>Carrinho</h3>
+
+{% if cliente_existente%}
+    <h4>Número do Pedido: {{ pedido.id }}</h4>
+    <p>Preço total do pedido: {{ pedido.preco_total }} €</p>
+    <p>Quantidade total de produtos: {{ pedido.quantidade_total }}</p>
+
+    {% for item in itens_pedido %}  
+    <p>
+        <img src="{{ item.itemestoque.produto.imagem.url }}" width="50px" height="50px">
+        Produto: {{ item.itemestoque.produto.nome }}; 
+        Cor: {{ item.itemestoque.cor.nome }}; 
+        Tamanho: {{ item.itemestoque.tamanho }}; 
+        <div style="display: flex;">
+            Quantidade: 
+            <form method="post" action="{% url 'remover_carrinho' item.itemestoque.produto.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+                <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+                <button type="submit">-</button>
+            </form>
+            {{item.quantidade}}
+            <form method="post" action="{% url 'adicionar_carrinho' item.itemestoque.produto.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="tamanho" value="{{ item.itemestoque.tamanho }}">
+                <input type="hidden" name="cor" value="{{ item.itemestoque.cor.id }}">
+                <button type="submit">+</button>
+            </form>;
+        </div>
+        Preço Unitário: {{item.itemestoque.produto.preco}} €;
+        Total: {{ item.preco_total }} €
+    </p>
+    <hr>
+    {% endfor %}
+
+    <a href="{% url 'checkout' %}">Checkout</a>
+
+{% else %}
+
+    <h3>Seu carrinho está vazio!</h3>
+    <a href="{% url 'loja' %}">Visite a nossa loja</a>
+    
+{% endif %}
+
+{% endblock %}

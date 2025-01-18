@@ -16,6 +16,7 @@ urlpatterns = [
     path('finalizarpedido/<int:id_pedido>/', finalizar_pedido, name="finalizar_pedido"),
     path('finalizarpagamento/', finalizar_pagamento, name="finalizar_pagamento"),
     path('pedidoaprovado/<int:id_pedido>/', pedido_aprovado, name="pedido_aprovado"),
+    path('sobre/', sobre, name="sobre"),
     
 
 
